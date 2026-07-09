@@ -6,6 +6,7 @@ services:
     container_name: prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus # <--- Adicionado para salvar os dados
     ports:
       - "9090:9090"
     networks:
@@ -16,8 +17,10 @@ services:
     container_name: grafana
     ports:
       - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana # <--- Adicionado para salvar os dashboards
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin # Senha padrão (mude depois)
+      - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
       - monitoring
     depends_on:
@@ -30,6 +33,10 @@ services:
       - "9100:9100"
     networks:
       - monitoring
+
+volumes: # <--- Criação dos volumes no final do arquivo
+  prometheus_data:
+  grafana_data:
 
 networks:
   monitoring:
